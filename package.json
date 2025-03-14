@@ -1,0 +1,41 @@
+{
+  "name": "edge-tags",
+  "version": "0.0.1",
+  "description": "Transpile x-tags into Edge.js components",
+  "repository": "KABBOUCHI/edge-tags",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "dev": "vitest dev",
+    "lint": "eslint . && prettier -c .",
+    "lint:fix": "eslint . --fix && prettier -w .",
+    "prepack": "pnpm build",
+    "test": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@vitest/coverage-v8": "^3.0.8",
+    "eslint": "^9.22.0",
+    "eslint-config-unjs": "^0.4.2",
+    "prettier": "^3.5.3",
+    "edge.js": "^6.2.1",
+    "typescript": "^5.8.2",
+    "unbuild": "^3.5.0",
+    "vitest": "^3.0.8"
+  },
+  "peerDependencies": {
+    "edge.js": "^6.0.0"
+  },
+  "packageManager": "pnpm@10.6.1"
+}
