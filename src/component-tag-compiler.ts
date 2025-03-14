@@ -68,14 +68,8 @@ export class ComponentTagCompiler {
     return value.replace(/<\/\s*x[-:][\w\-:.]*\s*>/g, "\n@end\n");
   }
 
-  protected componentString(
-    tagName: string,
-    attributes: Record<string, any> = {},
-  ): string {
-    const diskName = tagName.match(/^(?:(\w+)::)?([\w\-:.]*)$/)?.[1];
-    const prefix = diskName ? `${diskName}::` : "";
-
-    const components =
+  protected getEdgeComponents(diskName?: string) {
+    return (
       this.edge.loader
         .listComponents()
         .find((l) =>
@@ -83,20 +77,35 @@ export class ComponentTagCompiler {
             ? l.diskName === diskName
             : !l.diskName || l.diskName === "default",
         )
-        ?.components.map((c) => c.componentName) || [];
+        ?.components.map((c) => c.componentName) || []
+    );
+  }
 
-    let componentPath = tagName.replace(/\./g, "/");
+  protected componentString(
+    tagName: string,
+    attributes: Record<string, any> = {},
+  ): string {
+    const [_, diskName, componentName] =
+      tagName.match(/^(?:(\w+)::)?([\w\-:.]*)$/) || [];
+    if (!componentName) {
+      throw new Error(`Invalid component tag: ${tagName}`);
+    }
+
+    const prefix = diskName ? `${diskName}::` : "";
+
+    const components = this.getEdgeComponents(diskName);
+    let componentPath = componentName.replace(/\./g, "/");
 
     if (components.includes(prefix + componentPath)) {
-      componentPath = tagName.replace(/\./g, "/");
+      componentPath = prefix + componentName.replace(/\./g, "/");
     } else if (components.includes(prefix + `components/${componentPath}`)) {
-      componentPath = `components/${componentPath}`;
+      componentPath = prefix + `components/${componentPath}`;
     } else if (components.includes(prefix + `${componentPath}/index`)) {
-      componentPath = `${componentPath}/index`;
+      componentPath = prefix + `${componentPath}/index`;
     } else if (
       components.includes(prefix + `components/${componentPath}/index`)
     ) {
-      componentPath = `components/${componentPath}/index`;
+      componentPath = prefix + `components/${componentPath}/index`;
     }
 
     return `\n@component("${componentPath}", { ${this.attributesToString(attributes)} })`;
