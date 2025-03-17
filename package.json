@@ -1,6 +1,6 @@
 {
   "name": "edge-tags",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Transpile x-tags into Edge.js components",
   "repository": "KABBOUCHI/edge-tags",
   "license": "MIT",

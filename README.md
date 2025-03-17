@@ -41,6 +41,22 @@ When you write HTML-style custom elements:
 <x-button class="bg-white" a="b" :foo="bar" baz="{{ 1 + 2 }}">
   Hello
 </x-button>
+
+<x-card>
+    <x-card.title>
+        Hello
+    </x-card.title>
+
+    <x-card.body>
+        World
+    </x-card.body>
+
+    <x-slot name="footer">
+        Footer Content
+    </x-slot>
+</x-card>
+
+<x-diskName::avatar  />
 ```
 
 Edge-tags automatically converts it to Edge.js component syntax:
@@ -48,6 +64,23 @@ Edge-tags automatically converts it to Edge.js component syntax:
 ```edge
 @component('button', { class: 'bg-white', a: 'b', foo: bar, baz: `${1 + 2}` })
   Hello
+@end
+
+@component('card')
+    @component('card/title')
+        Hello
+    @end
+
+    @component('card/body')
+        World
+    @end
+
+    @slot('footer')
+        Footer Content
+    @end
+@end
+
+@component('diskName::avatar')
 @end
 ```
 
