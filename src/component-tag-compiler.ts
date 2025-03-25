@@ -127,14 +127,19 @@ export class ComponentTagCompiler {
     let attrMatch;
 
     while ((attrMatch = attrPattern.exec(" " + attributeString)) !== null) {
-      const attrName = attrMatch[1];
+      let attrName = attrMatch[1];
       if (!attrName) continue;
 
       const attrValue = attrMatch[2] || attrMatch[3] || attrMatch[4];
-      const isBound = attrName.startsWith(":");
+      const isBound = attrName.startsWith(":") && !attrName.startsWith("::");
+      const escapeAttrRendering = attrName.startsWith("::");
+
+      if (isBound || escapeAttrRendering) {
+        attrName = attrName.slice(1);
+      }
 
       if (isBound) {
-        attributes[attrName.slice(1)] = attrValue;
+        attributes[attrName] = attrValue;
       } else if (attrValue) {
         const isCurly = attrValue.match(/(\\)?{{(.*?)}}/);
 

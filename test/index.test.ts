@@ -214,4 +214,14 @@ Body
     const expected5 = `a\n@component("button", {  })\n@end\nb`;
     expect(input5.trim()).toBe(expected5);
   });
+
+  it("escape attribute binding", async () => {
+    const input = compiler.compileTags(`<x-input ::class="bg-red-500" />`);
+    const expected = `@component("input", { ":class": "bg-red-500" })\n@end`;
+    expect(input.trim()).toBe(expected);
+
+    const input2 = compiler.compileTags(`<x-input ::class="{{ 'foo' }}" />`);
+    const expected2 = `@component("input", { ":class": \`\${'foo' }\` })\n@end`;
+    expect(input2.trim()).toBe(expected2);
+  });
 });
